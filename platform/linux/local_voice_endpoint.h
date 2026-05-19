@@ -14,6 +14,10 @@ int local_voice_endpoint_running(void);
 int local_voice_endpoint_capture_start(void);
 int local_voice_endpoint_capture_stop(void);
 int local_voice_endpoint_cancel(void);
+
+int local_voice_endpoint_capturing(void);
+int local_voice_endpoint_capture_toggle(void);
+
 int local_voice_endpoint_set_input(const char *device);
 int local_voice_endpoint_set_output(const char *device);
 const char *local_voice_endpoint_get_input(void);

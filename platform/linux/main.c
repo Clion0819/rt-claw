@@ -22,6 +22,12 @@
 #ifdef CONFIG_RTCLAW_LINUX_LOCAL_VOICE_ENABLE
 #include "platform/linux/local_voice_endpoint.h"
 #endif
+#ifdef CONFIG_RTCLAW_LINUX_LOCAL_VOICE_BUTTON_ENABLE
+#include "platform/linux/local_voice_button.h"
+#endif
+#ifdef CONFIG_RTCLAW_TOOL_EXPRESSION
+#include "platform/expression_display.h"
+#endif
 
 extern int claw_init(void);
 extern void claw_deinit(void);
@@ -50,6 +56,7 @@ int main(void)
     board_early_init();
     shell_nvs_config_load();
     claw_init();
+
 #ifdef CONFIG_RTCLAW_LINUX_WEB_VOICE_ENABLE
     {
         voice_runtime_config_t cfg;
@@ -62,6 +69,7 @@ int main(void)
         }
     }
 #endif
+
 #ifdef CONFIG_RTCLAW_LINUX_LOCAL_VOICE_ENABLE
     {
         voice_runtime_config_t cfg;
@@ -74,14 +82,44 @@ int main(void)
         }
     }
 #endif
+
+#ifdef CONFIG_RTCLAW_LINUX_LOCAL_VOICE_BUTTON_ENABLE
+    {
+        int btn_ret = local_voice_button_init();
+        if (btn_ret == CLAW_OK) {
+            btn_ret = local_voice_button_start();
+            if (btn_ret != CLAW_OK) {
+                CLAW_LOGW("main", "voice button start failed");
+            }
+        } else {
+            CLAW_LOGW("main", "voice button init failed: %d",
+                      btn_ret);
+        }
+    }
+#endif
+
+#ifdef CONFIG_RTCLAW_TOOL_EXPRESSION
+    platform_expression_launch();
+#endif
+
     linux_shell_loop();
+
+#ifdef CONFIG_RTCLAW_TOOL_EXPRESSION
+    platform_expression_shutdown();
+#endif
+
+#ifdef CONFIG_RTCLAW_LINUX_LOCAL_VOICE_BUTTON_ENABLE
+    local_voice_button_stop();
+#endif
 
 #ifdef CONFIG_RTCLAW_LINUX_WEB_VOICE_ENABLE
     web_voice_server_stop();
 #endif
+
 #ifdef CONFIG_RTCLAW_LINUX_LOCAL_VOICE_ENABLE
     local_voice_endpoint_stop();
 #endif
+
     claw_deinit();
 
     return 0;

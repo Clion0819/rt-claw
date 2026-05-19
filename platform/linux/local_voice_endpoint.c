@@ -125,7 +125,13 @@ static int local_voice_spawn_capture(const char *device,
         return CLAW_ERR_IO;
     }
     if (pid == 0) {
+        int devnull = open("/dev/null", O_WRONLY);
+
         dup2(pipefd[1], STDOUT_FILENO);
+        if (devnull >= 0) {
+            dup2(devnull, STDERR_FILENO);
+            close(devnull);
+        }
         close(pipefd[0]);
         close(pipefd[1]);
         snprintf(rate_arg, sizeof(rate_arg), "%d", sample_rate);
@@ -223,7 +229,13 @@ static int local_voice_spawn_playback(const char *device,
         return CLAW_ERR_IO;
     }
     if (pid == 0) {
+        int devnull = open("/dev/null", O_WRONLY);
+
         dup2(pipefd[0], STDIN_FILENO);
+        if (devnull >= 0) {
+            dup2(devnull, STDERR_FILENO);
+            close(devnull);
+        }
         close(pipefd[0]);
         close(pipefd[1]);
         if (device && device[0]) {
@@ -682,6 +694,26 @@ int local_voice_endpoint_set_output(const char *device)
              "%s", device);
     local_voice_unlock();
     return CLAW_OK;
+}
+
+int local_voice_endpoint_capturing(void)
+{
+    int ret;
+
+    if (local_voice_lock() != CLAW_OK) {
+        return 0;
+    }
+    ret = s_local_voice.capturing;
+    local_voice_unlock();
+    return ret;
+}
+
+int local_voice_endpoint_capture_toggle(void)
+{
+    if (local_voice_endpoint_capturing()) {
+        return local_voice_endpoint_capture_stop();
+    }
+    return local_voice_endpoint_capture_start();
 }
 
 const char *local_voice_endpoint_get_input(void)

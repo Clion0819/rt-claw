@@ -24,6 +24,19 @@ if get_option('linux_local_voice')
     platform_src += files('local_voice_endpoint.c')
 endif
 
+# ===== 新增：按钮和表情平台文件 =====
+if get_option('linux_local_voice_button')
+    if not get_option('linux_local_voice')
+        error('linux_local_voice_button requires linux_local_voice=true')
+    endif
+    platform_src += files('local_voice_button.c')
+endif
+
+if get_option('tool_expression')
+    platform_src += files('expression_display_linux.c')
+endif
+# ==================================
+
 thread_dep = dependency('threads')
 platform_c_args = platform_defs
 
@@ -39,6 +52,15 @@ endif
 if get_option('linux_local_voice')
     platform_c_args += '-DCONFIG_RTCLAW_LINUX_LOCAL_VOICE_ENABLE'
 endif
+
+# ===== 新增：按钮和表情的编译定义 =====
+if get_option('linux_local_voice_button')
+    platform_c_args += '-DCONFIG_RTCLAW_LINUX_LOCAL_VOICE_BUTTON_ENABLE'
+endif
+if get_option('tool_expression')
+    platform_c_args += '-DCONFIG_RTCLAW_TOOL_EXPRESSION'
+endif
+# ======================================
 
 rtclaw_exe = executable('rtclaw',
     platform_src,
@@ -62,6 +84,16 @@ endif
 if get_option('linux_local_voice')
     test_platform_src += files('local_voice_endpoint.c')
 endif
+
+# ===== 新增：测试也包含按钮和表情文件 =====
+if get_option('linux_local_voice_button')
+    test_platform_src += files('local_voice_button.c')
+endif
+
+if get_option('tool_expression')
+    test_platform_src += files('expression_display_linux.c')
+endif
+# ==========================================
 
 rtclaw_test_exe = executable('rtclaw_test',
     test_main_src + test_platform_src,

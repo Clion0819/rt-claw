@@ -94,6 +94,14 @@ run_combo "linux_local_voice=true" \
 run_combo "linux voice endpoints" \
     -Dosal=linux -Dvoice=true \
     -Dlinux_web_voice=true -Dlinux_local_voice=true
+run_combo "tool_expression=true" \
+    -Dosal=linux -Dtool_expression=true
+run_combo "linux_local_voice_button=true" \
+    -Dosal=linux -Dvoice=true -Dlinux_local_voice=true \
+    -Dlinux_local_voice_button=true
+run_combo "voice button + expression" \
+    -Dosal=linux -Dvoice=true -Dlinux_local_voice=true \
+    -Dlinux_local_voice_button=true -Dtool_expression=true
 
 echo ""
 echo "--- Invalid / edge-case combinations ---"
@@ -107,6 +115,12 @@ expect_fail "linux_web_voice=true + voice=false" \
     -Dosal=linux -Dvoice=false -Dlinux_web_voice=true
 expect_fail "linux_local_voice=true + voice=false" \
     -Dosal=linux -Dvoice=false -Dlinux_local_voice=true
+expect_fail "linux_local_voice_button=true + voice=false" \
+    -Dosal=linux -Dvoice=false -Dlinux_local_voice=true \
+    -Dlinux_local_voice_button=true
+expect_fail "linux_local_voice_button=true + linux_local_voice=false" \
+    -Dosal=linux -Dvoice=true -Dlinux_local_voice=false \
+    -Dlinux_local_voice_button=true
 
 # All services and tools off (empty shell)
 run_combo "empty shell (all services+tools off)" \

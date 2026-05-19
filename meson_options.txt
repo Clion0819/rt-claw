@@ -88,3 +88,18 @@ option('ota_url', type: 'string', value: '',
     description: 'OTA version check URL (env: RTCLAW_OTA_URL)')
 option('ota_check_interval_ms', type: 'integer', value: 0, min: 0,
     description: 'OTA auto-check interval in ms, 0=manual only (env: RTCLAW_OTA_CHECK_INTERVAL_MS)')
+option('linux_local_voice_button', type: 'boolean', value: false,
+    description: 'Enable Linux GPIO button control for local voice endpoint')
+option('voice_button_gpiochip', type: 'string', value: '/dev/gpiochip0',
+    description: 'GPIO chip device path for voice button')
+option('voice_button_line', type: 'integer', value: 17, min: 0,
+    description: 'GPIO line number for voice button')
+option('voice_button_active_low', type: 'boolean', value: true,
+    description: 'GPIO button active-low (true=press pulls low)')
+option('voice_button_debounce_ms', type: 'integer', value: 50, min: 10,
+    description: 'GPIO button debounce interval in milliseconds')
+option('expression_ipc_path', type: 'string', value: '/run/rtclaw-expression.sock',
+    description: 'Unix domain socket path for expression IPC')
+
+option('tool_expression', type: 'boolean', value: false,
+    description: 'Enable local expression display tool')

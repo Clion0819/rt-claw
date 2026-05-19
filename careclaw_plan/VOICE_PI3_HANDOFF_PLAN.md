@@ -1,3 +1,5 @@
+# note
+在关键代码处加上日志，info 级别。项目已存在接口，不应该自己创建
 # Raspberry Pi 3 Local Voice + Expression Handoff Plan
 
 ## Confirmed decisions
@@ -26,6 +28,7 @@ Keep the current voice layering intact:
 - AI-callable expression behavior should be registered as a `claw_tool`, not as a hard dependency from voice service to display code.
 
 Do not add Raspberry Pi checks or backend-name checks in `voice_service`.
+
 
 ## Part 1: Reuse `/voice_local start/stop` without depending on shell commands
 

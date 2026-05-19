@@ -590,13 +590,17 @@ build-linux:
 			-Dtool_script=true \
 			-Dvoice=true \
 			-Dlinux_web_voice=true \
-			-Dlinux_local_voice=true; \
+			-Dlinux_local_voice=true \
+			-Dlinux_local_voice_button=true \
+			-Dtool_expression=true; \
 	else \
 		meson setup $(MESON_BUILDDIR_LINUX) --reconfigure \
 			-Dtool_script=true \
 			-Dvoice=true \
 			-Dlinux_web_voice=true \
-			-Dlinux_local_voice=true; \
+			-Dlinux_local_voice=true \
+			-Dlinux_local_voice_button=true \
+			-Dtool_expression=true; \
 	fi
 	meson compile -C $(MESON_BUILDDIR_LINUX)
 	@echo "Output: $(MESON_BUILDDIR_LINUX)/platform/linux/rtclaw"

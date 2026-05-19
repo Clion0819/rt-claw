@@ -168,6 +168,37 @@ foreach opt_name, pair : _int_overrides
     endif
 endforeach
 
+# ===== 新增：本地语音按钮配置 =====
+if get_option('linux_local_voice_button')
+    if not get_option('voice')
+        error('linux_local_voice_button=true requires voice=true')
+    endif
+    if not get_option('linux_local_voice')
+        error('linux_local_voice_button=true requires linux_local_voice=true')
+    endif
+    if osal_backend != 'linux'
+        error('linux_local_voice_button=true only applies to osal=linux')
+    endif
+
+    conf_data.set('CONFIG_RTCLAW_LINUX_LOCAL_VOICE_BUTTON_ENABLE', 1)
+    conf_data.set_quoted('CONFIG_RTCLAW_VOICE_BUTTON_GPIOCHIP',
+                         get_option('voice_button_gpiochip'))
+    conf_data.set('CONFIG_RTCLAW_VOICE_BUTTON_LINE',
+                  get_option('voice_button_line'))
+    conf_data.set('CONFIG_RTCLAW_VOICE_BUTTON_ACTIVE_LOW',
+                  get_option('voice_button_active_low') ? 1 : 0)
+    conf_data.set('CONFIG_RTCLAW_VOICE_BUTTON_DEBOUNCE_MS',
+                  get_option('voice_button_debounce_ms'))
+    _has_any = true
+endif
+
+if get_option('tool_expression')
+    conf_data.set('CONFIG_RTCLAW_TOOL_EXPRESSION', 1)
+    conf_data.set_quoted('CONFIG_RTCLAW_EXPRESSION_IPC',
+                         get_option('expression_ipc_path'))
+    _has_any = true
+endif
+
 claw_config_gen = configure_file(
     input: 'claw_gen_config.h.in',
     output: 'claw_gen_config.h',

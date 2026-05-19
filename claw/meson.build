@@ -72,6 +72,10 @@ if get_option('tool_mouse')
     feature_defs += '-DCONFIG_RTCLAW_TOOL_MOUSE'
     src_files += files('services/tools/mouse.c')
 endif
+if get_option('tool_expression')
+    feature_defs += '-DCONFIG_RTCLAW_TOOL_EXPRESSION'
+    src_files += files('services/tools/expression.c')
+endif
 if get_option('heartbeat')
     if not get_option('sched')
         error('heartbeat requires sched=true')
